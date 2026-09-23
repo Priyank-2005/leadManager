@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEON_DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(uuid())
+  name     String
+  email    String    @unique
+  phone    String    @unique
+  password          String
+  messages          Message[]
+  clientsAsAssignee Client[]  @relation("RevenueAssignee")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  text      String?
+  imageUrl  String?
+  fileName  String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  leadId    String?
+  lead      Lead?    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model PaymentMilestone {
+  id        String   @id @default(uuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  title     String   // e.g., "Advance", "UI Approval", "Final Delivery"
+  amount    Float
+  isPaid    Boolean  @default(false)
+  dueDate   DateTime?
+  createdAt DateTime @default(now())
+}
+
+model Meet {
+  id          String   @id @default(uuid())
+  title       String
+  date        DateTime
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  status      String   @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
+  createdAt   DateTime @default(now())
+}
+
+model Lead {
+  id                    String    @id @default(uuid())
+  name                  String
+  businessType          String?
+  status                String    @default("NEW") // NEW, CONTACTED, NEGOTIATION, WON, LOST
+  lastUpdate            String?
+  instagramUrl          String?
+  nextFollowUp          DateTime?
+  conversionProbability Int       @default(0)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  messages              Message[]
+  meets                 Meet[]
+}
+
+model Client {
+  id             String    @id @default(uuid())
+  name           String
+  businessType   String?
+  instagramUrl   String?
+  websiteUrl     String?
+  agreedPrice    Float
+  amountReceived Float     @default(0)
+  projectScope   String?
+  projectDetails    String?
+  liveDate          DateTime?
+  revenueAssigneeId String?
+  revenueAssignee   User?    @relation("RevenueAssignee", fields: [revenueAssigneeId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  messages          Message[]
+  milestones        PaymentMilestone[]
+}
