@@ -24,6 +24,30 @@ export default function Dashboard({ initialLeads, initialClients, userName }: Da
   
   const totalRevenue = initialClients.reduce((acc, c) => acc + (c.amountReceived || 0), 0)
 
+  const calculateGrowth = (items: any[], dateField: string, sumField?: string) => {
+    const now = new Date()
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
+
+    let currentPeriod = 0
+    let previousPeriod = 0
+
+    items.forEach(item => {
+      if (!item[dateField]) return
+      const d = new Date(item[dateField])
+      const val = sumField ? (item[sumField] || 0) : 1
+      if (d >= sevenDaysAgo) currentPeriod += val
+      else if (d >= fourteenDaysAgo && d < sevenDaysAgo) previousPeriod += val
+    })
+
+    if (previousPeriod === 0) return currentPeriod > 0 ? 100 : 0
+    return Math.round(((currentPeriod - previousPeriod) / previousPeriod) * 100)
+  }
+
+  const leadsGrowth = calculateGrowth(initialLeads, 'createdAt')
+  const clientsGrowth = calculateGrowth(initialClients, 'createdAt')
+  const revenueGrowth = calculateGrowth(initialClients, 'createdAt', 'amountReceived')
+
   // Upcoming Follow-Ups
   const upcomingFollowUps = initialLeads.filter(l => l.nextFollowUp && (isToday(new Date(l.nextFollowUp)) || isFuture(new Date(l.nextFollowUp))))
     .sort((a, b) => new Date(a.nextFollowUp).getTime() - new Date(b.nextFollowUp).getTime())
@@ -69,7 +93,9 @@ export default function Dashboard({ initialLeads, initialClients, userName }: Da
           <div className="mt-4">
             <p className="text-sm font-medium text-gray-500">Total Leads</p>
             <h3 className="text-3xl font-bold text-gray-900 mt-1">{totalLeads}</h3>
-            <p className="text-sm font-medium text-emerald-500 mt-2 flex items-center gap-1">↑ 100% <span className="text-gray-400 font-normal">vs last week</span></p>
+            <p className={`text-sm font-medium mt-2 flex items-center gap-1 ${leadsGrowth > 0 ? 'text-emerald-500' : leadsGrowth < 0 ? 'text-red-500' : 'text-gray-500'}`}>
+              {leadsGrowth > 0 ? '↑' : leadsGrowth < 0 ? '↓' : '-'} {Math.abs(leadsGrowth)}% <span className="text-gray-400 font-normal">vs last week</span>
+            </p>
           </div>
         </div>
 
@@ -82,7 +108,9 @@ export default function Dashboard({ initialLeads, initialClients, userName }: Da
           <div className="mt-4">
             <p className="text-sm font-medium text-gray-500">Active Clients</p>
             <h3 className="text-3xl font-bold text-gray-900 mt-1">{initialClients.length}</h3>
-            <p className="text-sm font-medium text-emerald-500 mt-2 flex items-center gap-1">↑ 25% <span className="text-gray-400 font-normal">vs last week</span></p>
+            <p className={`text-sm font-medium mt-2 flex items-center gap-1 ${clientsGrowth > 0 ? 'text-emerald-500' : clientsGrowth < 0 ? 'text-red-500' : 'text-gray-500'}`}>
+              {clientsGrowth > 0 ? '↑' : clientsGrowth < 0 ? '↓' : '-'} {Math.abs(clientsGrowth)}% <span className="text-gray-400 font-normal">vs last week</span>
+            </p>
           </div>
         </div>
 
@@ -95,7 +123,9 @@ export default function Dashboard({ initialLeads, initialClients, userName }: Da
           <div className="mt-4">
             <p className="text-sm font-medium text-gray-500">Revenue Received</p>
             <h3 className="text-3xl font-bold text-gray-900 mt-1">₹{totalRevenue.toLocaleString('en-IN')}</h3>
-            <p className="text-sm font-medium text-emerald-500 mt-2 flex items-center gap-1">↑ 40% <span className="text-gray-400 font-normal">vs last week</span></p>
+            <p className={`text-sm font-medium mt-2 flex items-center gap-1 ${revenueGrowth > 0 ? 'text-emerald-500' : revenueGrowth < 0 ? 'text-red-500' : 'text-gray-500'}`}>
+              {revenueGrowth > 0 ? '↑' : revenueGrowth < 0 ? '↓' : '-'} {Math.abs(revenueGrowth)}% <span className="text-gray-400 font-normal">vs last week</span>
+            </p>
           </div>
         </div>
       </div>
