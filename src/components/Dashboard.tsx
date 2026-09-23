@@ -139,20 +139,20 @@ export default function Dashboard({ initialLeads, initialClients, userName }: Da
           {upcomingFollowUps.length === 0 ? <p className="text-sm text-gray-500 text-center py-8">No upcoming follow-ups.</p> : (
             <div className="space-y-3">
               {upcomingFollowUps.map(lead => (
-                <div key={lead.id} className="flex items-center gap-4 text-sm p-4 bg-gray-50/50 rounded-xl border border-gray-100">
-                  <Checkbox id={`lead-${lead.id}`} onCheckedChange={(checked) => handleFollowUpDone(lead.id, !!checked)} />
-                  <div className="flex-1 flex justify-between items-center cursor-pointer">
+                <div key={lead.id} className="flex items-start sm:items-center gap-4 text-sm p-4 bg-gray-50/50 rounded-xl border border-gray-100">
+                  <div className="mt-1 sm:mt-0"><Checkbox id={`lead-${lead.id}`} onCheckedChange={(checked) => handleFollowUpDone(lead.id, !!checked)} /></div>
+                  <div className="flex-1 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 cursor-pointer">
                     <div>
                       <label htmlFor={`lead-${lead.id}`} className="font-semibold text-gray-900 cursor-pointer block">{lead.name}</label>
                       <span className="text-xs text-gray-500">Follow up call</span>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                       <div className="flex items-center gap-1 text-blue-600 font-medium">
                         <Calendar className="w-4 h-4" />
                         <span>{format(new Date(lead.nextFollowUp), 'MMM d, yyyy')}</span>
                         <span className="text-gray-400 text-xs ml-1">{format(new Date(lead.nextFollowUp), 'h:mm a')}</span>
                       </div>
-                      <span className="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Pending</span>
+                      <span className="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Pending</span>
                     </div>
                   </div>
                 </div>
@@ -177,17 +177,17 @@ export default function Dashboard({ initialLeads, initialClients, userName }: Da
             <div className="space-y-3">
               {upcomingMeets.map(meet => (
                 <div key={meet.id} className="flex flex-col text-sm p-4 bg-gray-50/50 rounded-xl border border-gray-100">
-                  <div className="flex items-center gap-4">
-                    <Checkbox id={`meet-${meet.id}`} onCheckedChange={(checked) => handleMeetDone(meet.id, !!checked)} />
-                    <div className="flex-1 flex justify-between items-start">
+                  <div className="flex items-start sm:items-center gap-4">
+                    <div className="mt-1 sm:mt-0"><Checkbox id={`meet-${meet.id}`} onCheckedChange={(checked) => handleMeetDone(meet.id, !!checked)} /></div>
+                    <div className="flex-1 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
                       <div>
                         <label htmlFor={`meet-${meet.id}`} className="font-semibold text-gray-900 cursor-pointer block">{meet.title}</label>
                         <p className="text-xs text-gray-500 mt-0.5">with {meet.leadName}</p>
                       </div>
-                      <div className="flex flex-col items-end gap-1">
-                        <span className="text-emerald-600 font-medium bg-emerald-50 px-2 py-1 rounded-lg text-xs">{format(new Date(meet.date), 'MMM d, p')}</span>
+                      <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-1">
+                        <span className="text-emerald-600 font-medium bg-emerald-50 px-2 py-1 rounded-lg text-xs whitespace-nowrap">{format(new Date(meet.date), 'MMM d, p')}</span>
                         {editingMeetId !== meet.id && (
-                          <button onClick={() => setEditingMeetId(meet.id)} className="text-xs text-gray-400 hover:text-indigo-600 flex items-center gap-1 mt-1"><Clock className="w-3 h-3" /> Reschedule</button>
+                          <button onClick={() => setEditingMeetId(meet.id)} className="text-xs text-gray-400 hover:text-indigo-600 flex items-center gap-1 sm:mt-1"><Clock className="w-3 h-3" /> Reschedule</button>
                         )}
                       </div>
                     </div>

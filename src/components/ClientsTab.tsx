@@ -90,16 +90,16 @@ export default function ClientsTab({ clients, userId }: { clients: any[], userId
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Clients Portfolio</h1>
           <p className="text-gray-500 mt-1">Manage your active clients and project details.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             <Input 
               type="text"
               placeholder="Search clients..."
-              className="pl-9 bg-white border-gray-200 focus-visible:ring-emerald-500 rounded-full w-[250px] shadow-sm"
+              className="pl-9 bg-white border-gray-200 focus-visible:ring-emerald-500 rounded-full w-full sm:w-[250px] shadow-sm"
             />
           </div>
-          <Button onClick={() => handleOpenDialog()} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-6 shadow-sm">+ Add Client</Button>
+          <Button onClick={() => handleOpenDialog()} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-6 shadow-sm whitespace-nowrap">+ Add Client</Button>
         </div>
       </div>
       <div className="rounded-2xl bg-white overflow-hidden shadow-sm border border-gray-100 w-full overflow-x-auto">

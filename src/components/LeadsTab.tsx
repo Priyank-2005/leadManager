@@ -149,18 +149,18 @@ export default function LeadsTab({ leads, userId }: { leads: any[], userId: stri
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Leads Pipeline</h1>
           <p className="text-gray-500 mt-1">Manage your potential clients and track progress from first contact to closure.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             <Input 
               type="text"
               placeholder="Search leads..."
-              className="pl-9 bg-white border-gray-200 focus-visible:ring-blue-500 rounded-full w-[250px] shadow-sm"
+              className="pl-9 bg-white border-gray-200 focus-visible:ring-blue-500 rounded-full w-full sm:w-[250px] shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button onClick={() => handleOpenDialog()} className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 shadow-sm">+ Add Lead</Button>
+          <Button onClick={() => handleOpenDialog()} className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 shadow-sm whitespace-nowrap">+ Add Lead</Button>
         </div>
       </div>
 
